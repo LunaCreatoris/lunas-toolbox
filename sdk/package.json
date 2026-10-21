@@ -1,0 +1,10 @@
+{
+  "name": "toolbox-usage-sdk",
+  "private": true,
+  "description": "Reads the plan usage of the user's own claude.ai login through the Agent SDK's /usage command (personal use only, D-013).",
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "0.3.292"
+  }
+}
