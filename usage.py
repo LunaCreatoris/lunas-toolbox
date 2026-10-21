@@ -11,9 +11,9 @@ The first output line is `state=<state>`, for the manager to gate on; the exit c
 the same:
 
   0  go         both windows below the caution level
-  10 caution    five-hour window >= CAUTION: start nothing heavy, finish running tasks
-  11 stop       five-hour window >= STOP: start no agent, report with the reset time
-  12 weekly     seven-day window >= WEEKLY_STOP: stop everything but finishing and committing
+  10 caution    five-hour window >= CAUTION: start nothing heavy, let running tasks finish
+  11 stop       five-hour window >= STOP: stop running agents cleanly, resume after the reset
+  12 weekly     seven-day window >= WEEKLY_STOP: same, resume after the weekly reset
   13 unknown    no reading (SDK failure, changed report shape, a window missing):
                 at most one agent at a time
 
@@ -54,10 +54,12 @@ DEFAULTS = {
 ADVICE = {
     "go": "start agents as planned",
     "caution": "start nothing heavy; let the running tasks finish",
-    "stop": "start no agent; report to the orchestrator with the reset time",
-    "weekly": "stop everything except finishing and committing what is done",
+    "stop": "stop running agents cleanly; resume after {reset}",
+    "weekly": "stop running agents cleanly; resume after {reset}",
     "unknown": "start at most one agent at a time; tell the user once for this wave",
 }
+# The window whose reset ends a stop.
+STOP_WINDOW = {"stop": "five_hour", "weekly": "seven_day"}
 # The first reading after an install starts the SDK cold, which can take over a minute from a network share.
 TIMEOUT_S = 180
 
@@ -205,6 +207,13 @@ def state(record: dict | None, env: dict[str, str], now: float, why_missing: str
     return "go", "both windows below the caution level"
 
 
+def advice(current: str, record: dict | None, now: float) -> str:
+    """What the factory does in this state; a stop names the reset after which work resumes."""
+    window = live_window(record or {}, STOP_WINDOW.get(current, ""), now)
+    reset = datetime.fromtimestamp(window["resets_at"]).strftime("%Y-%m-%d %H:%M") if window else "the reset"
+    return ADVICE[current].format(reset=f"{reset} (local time)" if window else reset)
+
+
 def describe(record: dict | None, now: float, note: str) -> list[str]:
     lines = []
     for name, label in zip(WINDOWS, ("five-hour", "seven-day"), strict=True):
@@ -225,7 +234,7 @@ def main(argv: list[str] | None = None, env: dict[str, str] | None = None, now: 
     record, note = reading(env, now, fetch or run_reader)
     current, reason = state(record, env, now, why_missing=note)
     print(f"state={current}")
-    print(f"{reason}: {ADVICE[current]}")
+    print(f"{reason}: {advice(current, record, now)}")
     for line in describe(record, now, note):
         print(line)
     return CODES[current]

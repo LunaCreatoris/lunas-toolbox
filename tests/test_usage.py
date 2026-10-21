@@ -177,10 +177,37 @@ def test_main_prints_the_state_first_and_exits_with_its_code(env, capsys):
     assert usage.main([], env, NOW, fetch_of(report)) == usage.CODES["stop"]
     lines = capsys.readouterr().out.splitlines()
     assert lines[0] == "state=stop"
-    assert "start no agent" in lines[1]
+    assert "stop running agents cleanly; resume after " in lines[1]
+    assert lines[1].endswith("(local time)")
     assert lines[2].startswith("five-hour: 96%, resets ")
     assert lines[-1].startswith("reading: fresh, 0 s old")
 
 
 def test_the_real_fixture_reads_as_go(env):
     assert usage.main([], env, NOW, fetch_of(REPORT)) == usage.CODES["go"]
+
+
+@pytest.mark.parametrize(
+    ("five", "seven", "expected"),
+    [
+        (10, 20, "start agents as planned"),
+        (75, 20, "start nothing heavy; let the running tasks finish"),
+        (96, 20, "stop running agents cleanly; resume after "),
+        (10, 96, "stop running agents cleanly; resume after "),
+        (None, 20, "start at most one agent at a time; tell the user once for this wave"),
+    ],
+)
+def test_each_state_says_what_to_do(five, seven, expected):
+    data = record(five, seven)
+    current, _ = usage.state(data, {}, NOW)
+    assert usage.advice(current, data, NOW).startswith(expected)
+
+
+def test_a_stop_names_the_reset_of_the_window_that_stopped():
+    data = {
+        "five_hour": {"used_percentage": 10, "resets_at": NOW + 3600},
+        "seven_day": {"used_percentage": 97, "resets_at": NOW + 5 * 86400},
+        "written_at": NOW,
+    }
+    weekly_reset = datetime.fromtimestamp(NOW + 5 * 86400).strftime("%Y-%m-%d %H:%M")
+    assert usage.advice("weekly", data, NOW).endswith(f"resume after {weekly_reset} (local time)")
