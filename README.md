@@ -39,3 +39,9 @@ running its tests there).
 
 Without `just`: `python3 usage.py` (`py -3.13 usage.py` on Windows), after `npm ci` in `sdk/`. The raw reader is
 `node sdk/read_usage.mjs <working folder>`.
+
+## Origin and licence
+
+Part of [Luna's ToolBox](https://github.com/LunaCreatoris/lunas-toolbox), where it serves an agent factory that
+checks usage before starting agents and every 10 minutes while they run. Licensed under the GNU Affero General
+Public License v3.0 only (`AGPL-3.0-only`), see [LICENSE](LICENSE). History: [CHANGELOG.md](CHANGELOG.md).

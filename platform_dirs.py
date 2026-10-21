@@ -1,4 +1,4 @@
-"""The platform's standard folders, for files the tooling keeps per user (OS-specific by nature, D-018)."""
+"""The platform's standard folders, for files the tooling keeps per user (OS-specific by nature)."""
 
 from __future__ import annotations
 

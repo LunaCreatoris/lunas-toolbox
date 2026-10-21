@@ -1,0 +1,11 @@
+# Dependencies installed by `just setup`
+node_modules/
+
+# Python caches
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Leftovers of files deleted while still open on a network share
+.smbdelete*

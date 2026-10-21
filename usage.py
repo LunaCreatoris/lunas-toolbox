@@ -3,7 +3,7 @@
 Usage: just usage            (state, both windows, reset times, age of the reading)
 
 The reading comes from the Agent SDK's /usage command, run by `sdk/read_usage.mjs` (Node,
-SDK pinned exactly): a local command, so no model request and no token spent (D-013).
+SDK pinned exactly): a local command, so no model request and no token spent.
 A reading younger than LUNA_USAGE_CACHE seconds (60) is reused from the usage file, so a
 manager checking before every agent does not start the CLI each time.
 
@@ -21,7 +21,7 @@ Levels come from LUNA_USAGE_CAUTION (70), LUNA_USAGE_STOP (95) and LUNA_USAGE_WE
 (95). A window whose reset time has passed counts as unknown.
 
 Personal use only: this runs the official Agent SDK on the user's own login, and is not
-offered to anyone else (see the README and D-013).
+offered to anyone else (see the README).
 """
 
 from __future__ import annotations

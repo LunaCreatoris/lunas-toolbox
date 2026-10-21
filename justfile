@@ -1,7 +1,8 @@
 # The usage gate, a self-contained tool: copy this folder into any repository and run `just setup` once.
 #
-# Recipes only call Python scripts of this folder, through recipe_shell.py (a copy of the ToolBox's recipe shell,
-# so the folder needs nothing outside it): arguments reach the scripts intact on every OS.
+# Recipes only call Python scripts of this folder, through recipe_shell.py (kept identical to the recipe shell
+# of the repository it comes from, so the folder needs nothing outside it): arguments reach the scripts intact
+# on every OS.
 
 set positional-arguments
 set windows-shell := ["py", "-3.13", "recipe_shell.py"]

@@ -1,5 +1,5 @@
 // Print the plan usage of the user's own claude.ai login as one JSON line, read through
-// the Agent SDK's /usage command (D-013). /usage is a local command: no model request is
+// the Agent SDK's /usage command. /usage is a local command: no model request is
 // made, and no token is spent. The SDK uses the login Claude Code already has; this script
 // never reads, copies or stores a credential.
 //
