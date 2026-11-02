@@ -103,6 +103,9 @@ def record_from_report(report: object, now: float) -> dict:
         percent, resets = row.get("percent"), epoch(row.get("resets_at"))
         if isinstance(percent, int | float) and not isinstance(percent, bool) and resets is not None:
             record[KINDS[row["kind"]]] = {"used_percentage": float(percent), "resets_at": resets}
+    # Some plans have no five-hour window: a good weekly row and no session row at all, unlike a malformed one.
+    kinds = {row.get("kind") for row in limits if isinstance(row, dict)} if isinstance(limits, list) else set()
+    record["no_five_hour"] = record["seven_day"] is not None and "session" not in kinds
     record["written_at"] = int(now)
     return record
 
@@ -201,6 +204,8 @@ def state(record: dict | None, env: dict[str, str], now: float, why_missing: str
         return "stop", f"five-hour window at {session['used_percentage']:.0f}%"
     if session and session["used_percentage"] >= limits["LUNA_USAGE_CAUTION"]:
         return "caution", f"five-hour window at {session['used_percentage']:.0f}%"
+    if weekly and record.get("no_five_hour"):
+        return "go", "seven-day window below its stop level; this plan has no five-hour window"
     missing = [name for name, value in (("five-hour", session), ("seven-day", weekly)) if value is None]
     if missing:
         return "unknown", f"{' and '.join(missing)} window unknown"
@@ -219,7 +224,8 @@ def describe(record: dict | None, now: float, note: str) -> list[str]:
     for name, label in zip(WINDOWS, ("five-hour", "seven-day"), strict=True):
         value = live_window(record or {}, name, now)
         if value is None:
-            lines.append(f"{label}: unknown")
+            no_window = name == "five_hour" and (record or {}).get("no_five_hour")
+            lines.append(f"{label}: none on this plan" if no_window else f"{label}: unknown")
             continue
         reset = datetime.fromtimestamp(value["resets_at"]).strftime("%Y-%m-%d %H:%M")
         lines.append(f"{label}: {value['used_percentage']:.0f}%, resets {reset} (local time)")

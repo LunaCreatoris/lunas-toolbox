@@ -9,6 +9,8 @@ Rules of this file:
 
 ## 2026-11
 
+- On a plan with no five-hour window, the gate no longer stays `unknown`: it reads `go` or `weekly` from the seven-day
+  window alone and says the plan has no five-hour window. A malformed five-hour row still reads `unknown`.
 - `just setup-test` installs the pinned pytest the tests need, so `just test` works on a clean machine after it.
 - The pytest pin the tests need now lives in this folder (`requirements.txt`).
 - The README, justfile and recipe shell no longer point at the tooling that left the repository, and the README

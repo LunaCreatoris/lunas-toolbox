@@ -211,3 +211,44 @@ def test_a_stop_names_the_reset_of_the_window_that_stopped():
     }
     weekly_reset = datetime.fromtimestamp(NOW + 5 * 86400).strftime("%Y-%m-%d %H:%M")
     assert usage.advice("weekly", data, NOW).endswith(f"resume after {weekly_reset} (local time)")
+
+
+# ------------------------------------------------------------- a plan with no five-hour window
+
+WEEKLY_ROW = {"kind": "weekly_all", "percent": 20, "resets_at": "2030-01-01T05:00:00Z"}
+
+
+def no_session_report() -> dict:
+    return {"rate_limits": {"limits": [WEEKLY_ROW]}}
+
+
+def test_a_plan_without_a_session_row_gates_on_the_weekly_window_alone():
+    now = 1_000_000.0
+    data = usage.record_from_report(no_session_report(), now)
+    assert data["five_hour"] is None
+    current, reason = usage.state(data, {}, now)
+    assert current == "go"
+    assert reason == "seven-day window below its stop level; this plan has no five-hour window"
+
+
+def test_a_plan_without_a_session_row_still_stops_on_the_weekly_window():
+    now = 1_000_000.0
+    report = {"rate_limits": {"limits": [{**WEEKLY_ROW, "percent": 96}]}}
+    assert usage.state(usage.record_from_report(report, now), {}, now)[0] == "weekly"
+
+
+def test_a_malformed_session_row_stays_unknown_even_with_a_good_weekly_row():
+    now = 1_000_000.0
+    report = {"rate_limits": {"limits": [WEEKLY_ROW, {"kind": "session", "percent": "53", "resets_at": None}]}}
+    assert usage.state(usage.record_from_report(report, now), {}, now)[0] == "unknown"
+
+
+def test_no_session_row_and_no_weekly_row_stays_unknown():
+    now = 1_000_000.0
+    assert usage.state(usage.record_from_report({"rate_limits": {"limits": []}}, now), {}, now)[0] == "unknown"
+
+
+def test_the_output_says_the_plan_has_no_five_hour_window():
+    now = 1_000_000.0
+    lines = usage.describe(usage.record_from_report(no_session_report(), now), now, "fresh")
+    assert lines[0] == "five-hour: none on this plan"

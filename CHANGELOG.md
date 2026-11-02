@@ -37,6 +37,8 @@ Rules of this file:
 
 ### usage
 
+- On a plan with no five-hour window, the gate reads `go` or `weekly` from the seven-day window instead of staying
+  `unknown` (`main`).
 - `just setup-test` installs the pinned pytest the tests need, so `just test` works on a clean machine after it
   (`chore/cleanup`).
 - The pytest pin moved into the folder (`usage/requirements.txt`), and the folder's wording no longer points at the

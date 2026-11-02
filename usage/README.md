@@ -14,6 +14,9 @@ login. One command, `just usage`, prints the state on its first line and returns
 Levels come from `LUNA_USAGE_CAUTION`, `LUNA_USAGE_STOP` and `LUNA_USAGE_WEEKLY_STOP`. A reading younger than
 `LUNA_USAGE_CACHE` seconds (60) is reused.
 
+Some plans have no five-hour window. The report then has a weekly row and no session row, and the gate reads `go` or
+`weekly` from the seven-day window alone; `caution` and `stop` never apply. A malformed five-hour row stays `unknown`.
+
 ## How it reads the usage
 
 It runs Claude Code's `/usage` command through the official Claude Agent SDK (TypeScript, pinned exactly in
