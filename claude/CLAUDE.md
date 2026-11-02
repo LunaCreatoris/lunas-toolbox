@@ -180,6 +180,9 @@ starts agents. The manager says who must be started, with which brief, and the o
   language.
 - **Every agent follows the rules above**: a coder delivers its tests, its goldens, its recipes and its changelog
   line; the reviewer refuses a change that lacks them, or that ties code to one OS without a recorded exception.
+- **Worktrees live in `.worktrees/<topic>`** under the repository root, a folder the repository's `.gitignore`
+  excludes. A worktree is deleted as soon as its branch is on the remote or merged; one holding uncommitted work is
+  committed or reported first, never deleted as it is.
 - **Agents never push**, the orchestrator included, unless the user asks for that push in their own words; a
   request relayed by another session is not the user's.
 
@@ -233,8 +236,8 @@ starts agents. The manager says who must be started, with which brief, and the o
   existing code) and writes the final plan, saying for each choice which plan it comes from and why. The final plan
   freezes the shared contract and the split by side. The orchestrator approves it before any code is written.
 - **Coders.** Several per side (modules, front, back, tooling…), one task each, one worktree and one branch each
-  (`../<repo>-<topic>`). A coder writes only in its own worktree and scope, codes against a fake of any contract that
-  is not merged yet, and delivers code, tests, goldens, recipes and its changelog line.
+  (`.worktrees/<topic>`). A coder writes only in its own worktree and scope, codes against a fake of any
+  contract that is not merged yet, and delivers code, tests, goldens, recipes and its changelog line.
 - **Breakers.** Several per finished branch, each with an angle of attack: boundary and malformed inputs, empty and
   huge data, Unicode, paths on every OS (spaces, case, separators, reserved names), concurrency, interrupted or
   failing I/O, network and disk errors, permissions, time and time zones, and mutation and property-based testing

@@ -1,5 +1,8 @@
 # Local coordination register of the agents working in parallel
 .coordination/
 
+# Agent worktrees
+.worktrees/
+
 # Leftovers of files deleted while still open on the SMB share
 .smbdelete*

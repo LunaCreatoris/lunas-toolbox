@@ -18,7 +18,7 @@ Rules of this file:
 
 - **Removed**: the home-made agent factory, its plugins, guards, shared tooling and register (`agent-factory/`,
   `.claude-plugin/`, `shared/`, `wiki/`, the root justfile and the root Python configuration). Use the third-party
-  skills listed in `claude/CLAUDE.md` instead; the old content stays in git history (`chore/cleanup`).
+  skills listed in `claude/CLAUDE.md` instead (`chore/cleanup`).
 - Changelog lines carry their branch name rather than a merge request link, which would expose the private remote
   (`chore/cleanup`).
 - The repository is now two folders, `usage/` and `claude/`; the README is a short index of them and names no
@@ -26,6 +26,8 @@ Rules of this file:
 
 ### rules
 
+- Worktrees live in `.worktrees/<topic>`, git-ignored, and are deleted once their branch is on the remote or
+  merged (`main`).
 - The usage gate says how to reach the tool: `just usage/usage` from the project's root, with the `usage/` folder
   copied there and `just setup` run once inside it (`chore/cleanup`).
 - **Migration**: `CLAUDE.md` moved to `claude/CLAUDE.md`; copy it to a project's root to use it (`chore/cleanup`).
