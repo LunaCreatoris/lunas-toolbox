@@ -1,0 +1,5 @@
+# Local coordination register of the agents working in parallel
+.coordination/
+
+# Leftovers of files deleted while still open on the SMB share
+.smbdelete*

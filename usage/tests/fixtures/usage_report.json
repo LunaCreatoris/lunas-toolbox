@@ -1,0 +1,56 @@
+{
+  "_comment": "A real /usage report from the Agent SDK (0.3.292), reset times replaced by fixed values in 2030.",
+  "report": {
+    "session": {
+      "total_cost_usd": 0,
+      "total_api_duration_ms": 0,
+      "total_duration_ms": 1000,
+      "total_lines_added": 0,
+      "total_lines_removed": 0,
+      "model_usage": {}
+    },
+    "rate_limits": {
+      "limits": [
+        {
+          "kind": "session",
+          "group": "session",
+          "percent": 53,
+          "resets_at": "2030-01-01T05:00:00.466740+00:00",
+          "scope": null,
+          "severity": "normal",
+          "is_active": true
+        },
+        {
+          "kind": "weekly_all",
+          "group": "weekly",
+          "percent": 28,
+          "resets_at": "2030-01-07T21:00:00.466755+00:00",
+          "scope": null,
+          "severity": "normal",
+          "is_active": false
+        },
+        {
+          "kind": "weekly_scoped",
+          "group": "weekly",
+          "percent": 0,
+          "resets_at": "2030-01-07T21:00:00+00:00",
+          "scope": {
+            "model": {
+              "display_name": "Fable"
+            },
+            "surface": null
+          },
+          "severity": "normal",
+          "is_active": false
+        }
+      ],
+      "extra_usage": {
+        "is_enabled": false,
+        "monthly_limit": null,
+        "used_credits": null,
+        "utilization": null,
+        "currency": null
+      }
+    }
+  }
+}

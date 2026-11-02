@@ -1,0 +1,4 @@
+* text=auto eol=lf
+# Images (goldens, icons) are binary: never normalised, never diffed as text.
+*.png binary
+*.woff2 binary
